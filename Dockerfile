@@ -193,9 +193,13 @@ RUN curl -s -f -L -o /tmp/installer.php https://raw.githubusercontent.com/compos
     && rm /tmp/installer.php
 
 RUN mkdir -p /var/www \
-    && mkdir -p /etc/nginx/certs
+    && mkdir -p /etc/nginx/certs \
+    && mkdir -p /etc/nginx/conf.d
 
-VOLUME ["/var/www", "/etc/nginx/certs"]
+VOLUME ["/var/www", "/etc/nginx/certs", "/etc/nginx/conf.d"]
+
+COPY etc/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY etc/nginx/conf.d/_.conf /etc/nginx/conf.d/default.conf
 
 WORKDIR /var/www
 
