@@ -192,6 +192,10 @@ RUN curl -s -f -L -o /tmp/installer.php https://raw.githubusercontent.com/compos
     && composer --ansi --version --no-interaction \
     && rm /tmp/installer.php
 
+# add phpunit
+RUN curl -fSL -o /usr/bin/phpunit https://phar.phpunit.de/phpunit-6.3.phar \
+    && chmod a+x /usr/bin/phpunit
+
 RUN mkdir -p /var/www \
     && mkdir -p /etc/nginx/certs \
     && mkdir -p /etc/nginx/conf.d
