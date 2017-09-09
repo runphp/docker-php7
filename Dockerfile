@@ -175,6 +175,7 @@ RUN echo "memory_limit=-1" > "$PHP_INI_DIR/conf.d/memory-limit.ini" \
     && echo "date.timezone=${PHP_TIMEZONE:-UTC}" > "$PHP_INI_DIR/conf.d/date_timezone.ini" \
     && echo "output_buffering = 4096" > "$PHP_INI_DIR/conf.d/output_buffering.ini"
 
+# add composer
 ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV COMPOSER_HOME /tmp
 ENV COMPOSER_VERSION 1.5.1
@@ -190,7 +191,8 @@ RUN curl -s -f -L -o /tmp/installer.php https://raw.githubusercontent.com/compos
     }" \
     && php /tmp/installer.php --no-ansi --install-dir=/usr/bin --filename=composer --version=${COMPOSER_VERSION} \
     && composer --ansi --version --no-interaction \
-    && rm /tmp/installer.php
+    && rm /tmp/installer.php \
+    && composer config -g repo.packagist composer https://packagist.phpcomposer.com
 
 # add phpunit
 RUN curl -fSL -o /usr/bin/phpunit https://phar.phpunit.de/phpunit-6.3.phar \
