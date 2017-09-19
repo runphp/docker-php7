@@ -30,6 +30,12 @@ RUN set -xe \
 # install some extension
 RUN docker-php-ext-install bcmath pdo_mysql
 
+# install swoole
+RUN set -xe \
+    && apk --no-cache --virtual add linux-headers \
+    && pecl install swoole \
+    && docker-php-ext-enable swoole
+
 RUN set -xe \
     && apk add --no-cache --virtual openssl-dev \
     && pecl install igbinary-2.0.1 \
@@ -168,8 +174,8 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log
 
-# add supervisor and git
-RUN apk --no-cache add supervisor git
+# add supervisor git and bash
+RUN apk --no-cache add supervisor git bash
 
 RUN echo "memory_limit=-1" > "$PHP_INI_DIR/conf.d/memory-limit.ini" \
     && echo "date.timezone=${PHP_TIMEZONE:-UTC}" > "$PHP_INI_DIR/conf.d/date_timezone.ini" \
