@@ -16,8 +16,8 @@ git clone https://github.com/runphp/docker-php7
 docker run -p 80:80 -p 443:443 -p 9501:9501 -d \
     --name=eelly-php7 \
     -v $PWD:/var/www \
-    -v docker-php7/etc/nginx/certs:/etc/nginx/certs \
-    -v docker-php7/etc/nginx/conf.d:/etc/nginx/conf.d \
+    -v $PWD/ocker-php7/etc/nginx/certs:/etc/nginx/certs \
+    -v $PWD/docker-php7/etc/nginx/conf.d:/etc/nginx/conf.d \
     eelly/php7
 
 # windows 需要绝对路径
