@@ -28,7 +28,7 @@ RUN set -xe \
     && rm -r /tmp/phpiredis
 
 # install some extension
-RUN docker-php-ext-install bcmath pdo_mysql
+RUN docker-php-ext-install bcmath pdo_mysql mysqli
 
 # install swoole
 RUN set -xe \
@@ -37,11 +37,16 @@ RUN set -xe \
     && docker-php-ext-enable swoole
 
 RUN set -xe \
-    && apk add --no-cache --virtual openssl-dev \
-    && pecl install igbinary-2.0.1 \
-    && pecl install mongodb-1.2.9 \
-    && pecl install xdebug-2.5.5 \
-    && docker-php-ext-enable igbinary mongodb xdebug
+    && apk add --no-cache --virtual openssl-dev
+
+RUN pecl install igbinary-2.0.4 \
+    && docker-php-ext-enable igbinary
+
+RUN pecl install mongodb-1.2.9 \
+    && docker-php-ext-enable mongodb
+
+RUN pecl install xdebug-2.5.5 \
+    && docker-php-ext-enable xdebug
 
 ENV NGINX_VERSION 1.13.3
 # install nginx
