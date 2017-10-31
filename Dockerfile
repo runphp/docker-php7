@@ -42,11 +42,27 @@ RUN set -xe \
 RUN pecl install igbinary-2.0.4 \
     && docker-php-ext-enable igbinary
 
-RUN pecl install mongodb-1.2.9 \
-    && docker-php-ext-enable mongodb
+ENV XDEBUG_VERSION=2.5.5
+# compile xdebug extension
+RUN set -xe \
+    && curl -fsSL http://pecl.php.net/get/xdebug-${XDEBUG_VERSION}.tgz -o xdebug.tar.gz \
+    && mkdir -p /tmp/xdebug \
+    && tar -xf xdebug.tar.gz -C /tmp/xdebug --strip-components=1 \
+    && rm xdebug.tar.gz \
+    && docker-php-ext-configure /tmp/xdebug --enable-xdebug \
+    && docker-php-ext-install /tmp/xdebug \
+    && rm -r /tmp/xdebug
 
-RUN pecl install xdebug-2.5.5 \
-    && docker-php-ext-enable xdebug
+ENV MONGODB_VERSION=1.3.2
+# compile mongodb extension
+RUN set -xe \
+    && curl -fsSL http://pecl.php.net/get/mongodb-${MONGODB_VERSION}.tgz -o mongodb.tar.gz \
+    && mkdir -p /tmp/mongodb \
+    && tar -xf mongodb.tar.gz -C /tmp/mongodb --strip-components=1 \
+    && rm mongodb.tar.gz \
+    && docker-php-ext-configure /tmp/mongodb --enable-mongodb \
+    && docker-php-ext-install /tmp/mongodb \
+    && rm -r /tmp/mongodb
 
 ENV NGINX_VERSION 1.13.3
 # install nginx
@@ -184,7 +200,8 @@ RUN apk --no-cache add supervisor git bash
 
 RUN echo "memory_limit=-1" > "$PHP_INI_DIR/conf.d/memory-limit.ini" \
     && echo "date.timezone=${PHP_TIMEZONE:-UTC}" > "$PHP_INI_DIR/conf.d/date_timezone.ini" \
-    && echo "output_buffering = 4096" > "$PHP_INI_DIR/conf.d/output_buffering.ini"
+    && echo "output_buffering=4096" > "$PHP_INI_DIR/conf.d/output_buffering.ini" \
+    && echo -e "xdebug.auto_trace=on\nxdebug.profiler_enable=on\nxdebug.profiler_output_dir=/tmp" > "$PHP_INI_DIR/conf.d/xdebug.ini"
 
 # add composer
 ENV COMPOSER_ALLOW_SUPERUSER 1
