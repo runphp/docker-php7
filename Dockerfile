@@ -205,15 +205,13 @@ RUN set -xe \
 
 ENV MEMCACHED_VERSION=3.0.3
 # compile memcached extension
-ENV MEMCACHED_DEPS zlib-dev libmemcached-dev cyrus-sasl-dev
 RUN set -xe \
-    && apk add --no-cache libmemcached-libs zlib \
-    && apk add --no-cache --virtual .memcached-deps $MEMCACHED_DEPS \
+    && apk add --no-cache zlib-dev libmemcached-dev cyrus-sasl-dev \
     && curl -fsSL http://pecl.php.net/get/memcached-${MEMCACHED_VERSION}.tgz -o memcached.tar.gz \
     && mkdir -p /tmp/memcached \
     && tar -xf memcached.tar.gz -C /tmp/memcached --strip-components=1 \
     && rm memcached.tar.gz \
-    && docker-php-ext-configure /tmp/memcached --enable-memcached \
+    && docker-php-ext-configure /tmp/memcached --enable-memcached-igbinary --enable-memcached \
     && docker-php-ext-install /tmp/memcached \
     && rm -r /tmp/memcached
 
@@ -223,27 +221,12 @@ RUN echo "memory_limit=-1" > "$PHP_INI_DIR/conf.d/memory-limit.ini" \
     && echo -e "xdebug.auto_trace=on\nxdebug.profiler_enable=on\nxdebug.profiler_output_dir=/tmp" > "$PHP_INI_DIR/conf.d/xdebug.ini"
 
 # add composer
-ENV COMPOSER_ALLOW_SUPERUSER 1
-ENV COMPOSER_HOME /tmp
-ENV COMPOSER_VERSION 1.5.1
-
-RUN curl -s -f -L -o /tmp/installer.php https://raw.githubusercontent.com/composer/getcomposer.org/da290238de6d63faace0343efbdd5aa9354332c5/web/installer \
-    && php -r " \
-    \$signature = '669656bab3166a7aff8a7506b8cb2d1c292f042046c5a994c43155c0be6190fa0355160742ab2e1c88d40d5be660b410'; \
-    \$hash = hash('SHA384', file_get_contents('/tmp/installer.php')); \
-    if (!hash_equals(\$signature, \$hash)) { \
-        unlink('/tmp/installer.php'); \
-        echo 'Integrity check failed, installer is either corrupt or worse.' . PHP_EOL; \
-        exit(1); \
-    }" \
-    && php /tmp/installer.php --no-ansi --install-dir=/usr/bin --filename=composer --version=${COMPOSER_VERSION} \
-    && composer --ansi --version --no-interaction \
-    && rm /tmp/installer.php \
-    && composer config -g repo.packagist composer https://packagist.phpcomposer.com
+COPY install/composer.phar /usr/bin/composer
+RUN chmod a+x /usr/bin/composer
 
 # add phpunit
-RUN curl -fSL -o /usr/bin/phpunit https://phar.phpunit.de/phpunit-6.3.phar \
-    && chmod a+x /usr/bin/phpunit
+COPY install/phpunit.phar /usr/bin/phpunit
+RUN chmod a+x /usr/bin/phpunit
 
 RUN mkdir -p /var/www \
     && mkdir -p /etc/nginx/certs \
