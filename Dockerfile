@@ -2,68 +2,6 @@ FROM php:7.1-fpm-alpine
 
 LABEL maintainer="runphp <runphp@qq.com>"
 
-ENV PHALCON_VERSION=3.2.2
-
-# compile phalcon extension
-RUN set -xe \
-    && apk add --no-cache --virtual .build-deps autoconf g++ make pcre-dev re2c \
-    && curl -fsSL https://github.com/phalcon/cphalcon/archive/v${PHALCON_VERSION}.tar.gz -o cphalcon.tar.gz \
-    && mkdir -p cphalcon \
-    && tar -xf cphalcon.tar.gz -C cphalcon --strip-components=1 \
-    && rm cphalcon.tar.gz \
-    && cd cphalcon/build \
-    && sh install \
-    && rm -rf cphalcon \
-    && docker-php-ext-enable phalcon
-
-# compile phpiredis extension
-RUN set -xe \
-    && apk --no-cache --virtual add hiredis-dev \
-    && curl -fsSL https://github.com/nrk/phpiredis/archive/v1.0.0.tar.gz -o phpiredis.tar.gz \
-    && mkdir -p /tmp/phpiredis \
-    && tar -xf phpiredis.tar.gz -C /tmp/phpiredis --strip-components=1 \
-    && rm phpiredis.tar.gz \
-    && docker-php-ext-configure /tmp/phpiredis --enable-phpiredis \
-    && docker-php-ext-install /tmp/phpiredis \
-    && rm -r /tmp/phpiredis
-
-# install some extension
-RUN docker-php-ext-install bcmath pdo_mysql mysqli
-
-# install swoole
-RUN set -xe \
-    && apk --no-cache --virtual add linux-headers \
-    && pecl install swoole \
-    && docker-php-ext-enable swoole
-
-RUN set -xe \
-    && apk add --no-cache --virtual openssl-dev
-
-RUN pecl install igbinary-2.0.4 \
-    && docker-php-ext-enable igbinary
-
-ENV XDEBUG_VERSION=2.5.5
-# compile xdebug extension
-RUN set -xe \
-    && curl -fsSL http://pecl.php.net/get/xdebug-${XDEBUG_VERSION}.tgz -o xdebug.tar.gz \
-    && mkdir -p /tmp/xdebug \
-    && tar -xf xdebug.tar.gz -C /tmp/xdebug --strip-components=1 \
-    && rm xdebug.tar.gz \
-    && docker-php-ext-configure /tmp/xdebug --enable-xdebug \
-    && docker-php-ext-install /tmp/xdebug \
-    && rm -r /tmp/xdebug
-
-ENV MONGODB_VERSION=1.3.2
-# compile mongodb extension
-RUN set -xe \
-    && curl -fsSL http://pecl.php.net/get/mongodb-${MONGODB_VERSION}.tgz -o mongodb.tar.gz \
-    && mkdir -p /tmp/mongodb \
-    && tar -xf mongodb.tar.gz -C /tmp/mongodb --strip-components=1 \
-    && rm mongodb.tar.gz \
-    && docker-php-ext-configure /tmp/mongodb --enable-mongodb \
-    && docker-php-ext-install /tmp/mongodb \
-    && rm -r /tmp/mongodb
-
 ENV NGINX_VERSION 1.13.3
 # install nginx
 RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
@@ -197,6 +135,87 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 
 # add supervisor git and bash
 RUN apk --no-cache add supervisor git bash
+
+ENV PHALCON_VERSION=3.2.4
+
+# compile phalcon extension
+RUN set -xe \
+    && apk add --no-cache --virtual .build-deps autoconf g++ make pcre-dev re2c
+
+RUN curl -fsSL https://github.com/phalcon/cphalcon/archive/v${PHALCON_VERSION}.tar.gz -o cphalcon.tar.gz \
+    && mkdir -p cphalcon \
+    && tar -xf cphalcon.tar.gz -C cphalcon --strip-components=1 \
+    && rm cphalcon.tar.gz \
+    && cd cphalcon/build \
+    && sh install \
+    && rm -rf cphalcon \
+    && docker-php-ext-enable phalcon
+
+# compile phpiredis extension
+RUN set -xe \
+    && apk --no-cache --virtual add hiredis-dev \
+    && curl -fsSL https://github.com/nrk/phpiredis/archive/v1.0.0.tar.gz -o phpiredis.tar.gz \
+    && mkdir -p /tmp/phpiredis \
+    && tar -xf phpiredis.tar.gz -C /tmp/phpiredis --strip-components=1 \
+    && rm phpiredis.tar.gz \
+    && docker-php-ext-configure /tmp/phpiredis --enable-phpiredis \
+    && docker-php-ext-install /tmp/phpiredis \
+    && rm -r /tmp/phpiredis
+
+# install some extension
+RUN docker-php-ext-install bcmath pdo_mysql mysqli
+
+# install swoole
+RUN set -xe \
+    && apk --no-cache --virtual add linux-headers zlib-dev
+
+ENV SWOOLE_VERSION=1.9.22
+RUN set -xe \
+    && curl -fsSL http://pecl.php.net/get/swoole-${SWOOLE_VERSION}.tgz -o swoole.tar.gz \
+    && mkdir -p /tmp/swoole \
+    && tar -xf swoole.tar.gz -C /tmp/swoole --strip-components=1 \
+    && rm swoole.tar.gz \
+    && docker-php-ext-configure /tmp/swoole --enable-swoole \
+    && docker-php-ext-install /tmp/swoole \
+    && rm -r /tmp/swoole
+
+RUN set -xe \
+    && apk add --no-cache --virtual openssl-dev
+
+ENV IGBINARY_VERSION=2.0.5
+RUN set -xe \
+    && curl -fsSL http://pecl.php.net/get/igbinary-${IGBINARY_VERSION}.tgz -o igbinary.tar.gz \
+    && mkdir -p /tmp/igbinary \
+    && tar -xf igbinary.tar.gz -C /tmp/igbinary --strip-components=1 \
+    && rm igbinary.tar.gz \
+    && docker-php-ext-configure /tmp/igbinary --enable-igbinary \
+    && docker-php-ext-install /tmp/igbinary \
+    && rm -r /tmp/igbinary
+
+ENV MONGODB_VERSION=1.3.2
+# compile mongodb extension
+RUN set -xe \
+    && curl -fsSL http://pecl.php.net/get/mongodb-${MONGODB_VERSION}.tgz -o mongodb.tar.gz \
+    && mkdir -p /tmp/mongodb \
+    && tar -xf mongodb.tar.gz -C /tmp/mongodb --strip-components=1 \
+    && rm mongodb.tar.gz \
+    && docker-php-ext-configure /tmp/mongodb --enable-mongodb \
+    && docker-php-ext-install /tmp/mongodb \
+    && rm -r /tmp/mongodb
+
+ENV MEMCACHED_VERSION=3.0.3
+# compile memcached extension
+ENV MEMCACHED_DEPS zlib-dev libmemcached-dev cyrus-sasl-dev
+RUN set -xe \
+    && apk add --no-cache libmemcached-libs zlib \
+    && apk add --no-cache --virtual .memcached-deps $MEMCACHED_DEPS \
+    && curl -fsSL http://pecl.php.net/get/memcached-${MEMCACHED_VERSION}.tgz -o memcached.tar.gz \
+    && mkdir -p /tmp/memcached \
+    && tar -xf memcached.tar.gz -C /tmp/memcached --strip-components=1 \
+    && rm memcached.tar.gz \
+    && docker-php-ext-configure /tmp/memcached --enable-memcached \
+    && docker-php-ext-install /tmp/memcached \
+    && rm -r /tmp/memcached
 
 RUN echo "memory_limit=-1" > "$PHP_INI_DIR/conf.d/memory-limit.ini" \
     && echo "date.timezone=${PHP_TIMEZONE:-UTC}" > "$PHP_INI_DIR/conf.d/date_timezone.ini" \
