@@ -169,7 +169,7 @@ RUN docker-php-ext-install bcmath pdo_mysql mysqli
 RUN set -xe \
     && apk --no-cache --virtual add linux-headers zlib-dev
 
-ENV SWOOLE_VERSION=1.9.22
+ENV SWOOLE_VERSION=1.9.23
 RUN set -xe \
     && curl -fsSL http://pecl.php.net/get/swoole-${SWOOLE_VERSION}.tgz -o swoole.tar.gz \
     && mkdir -p /tmp/swoole \
@@ -214,6 +214,39 @@ RUN set -xe \
     && docker-php-ext-configure /tmp/memcached --enable-memcached-igbinary --enable-memcached \
     && docker-php-ext-install /tmp/memcached \
     && rm -r /tmp/memcached
+
+ENV REDIS_VERSION=3.1.4
+# compile memcached extension
+RUN set -xe \
+    && curl -fsSL http://pecl.php.net/get/redis-${REDIS_VERSION}.tgz -o redis.tar.gz \
+    && mkdir -p /tmp/redis \
+    && tar -xf redis.tar.gz -C /tmp/redis --strip-components=1 \
+    && rm redis.tar.gz \
+    && docker-php-ext-configure /tmp/redis --enable-redis \
+    && docker-php-ext-install /tmp/redis \
+    && rm -r /tmp/redis
+
+ENV APCU_VERSION=5.1.8
+# compile apcu extension
+RUN set -xe \
+    && curl -fsSL http://pecl.php.net/get/apcu-${APCU_VERSION}.tgz -o apcu.tar.gz \
+    && mkdir -p /tmp/apcu \
+    && tar -xf apcu.tar.gz -C /tmp/apcu --strip-components=1 \
+    && rm apcu.tar.gz \
+    && docker-php-ext-configure /tmp/apcu --enable-apcu \
+    && docker-php-ext-install /tmp/apcu \
+    && rm -r /tmp/apcu
+
+ENV RAR_VERSION=4.0.0
+# compile rar extension
+RUN set -xe \
+    && curl -fsSL http://pecl.php.net/get/rar-${RAR_VERSION}.tgz -o rar.tar.gz \
+    && mkdir -p /tmp/rar \
+    && tar -xf rar.tar.gz -C /tmp/rar --strip-components=1 \
+    && rm rar.tar.gz \
+    && docker-php-ext-configure /tmp/rar --enable-rar \
+    && docker-php-ext-install /tmp/rar \
+    && rm -r /tmp/rar
 
 RUN echo "memory_limit=-1" > "$PHP_INI_DIR/conf.d/memory-limit.ini" \
     && echo "date.timezone=${PHP_TIMEZONE:-UTC}" > "$PHP_INI_DIR/conf.d/date_timezone.ini" \
