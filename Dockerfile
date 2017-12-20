@@ -250,8 +250,7 @@ RUN set -xe \
 
 RUN echo "memory_limit=-1" > "$PHP_INI_DIR/conf.d/memory-limit.ini" \
     && echo "date.timezone=${PHP_TIMEZONE:-UTC}" > "$PHP_INI_DIR/conf.d/date_timezone.ini" \
-    && echo "output_buffering=4096" > "$PHP_INI_DIR/conf.d/output_buffering.ini" \
-    && echo -e "xdebug.auto_trace=on\nxdebug.profiler_enable=on\nxdebug.profiler_output_dir=/tmp" > "$PHP_INI_DIR/conf.d/xdebug.ini"
+    && echo "output_buffering=4096" > "$PHP_INI_DIR/conf.d/output_buffering.ini"
 
 # add composer
 COPY install/composer.phar /usr/bin/composer
