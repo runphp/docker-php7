@@ -16,6 +16,7 @@ git clone https://github.com/runphp/docker-php7
 docker run -p 80:80 -p 443:443 -p 9501:9501 -d \
     --name=eelly-php7 \
     -v $PWD:/var/www \
+    -v $PWD/composer:/root/.composer \
     -v $PWD/ocker-php7/etc/nginx/certs:/etc/nginx/certs \
     -v $PWD/docker-php7/etc/nginx/conf.d:/etc/nginx/conf.d \
     eelly/php7
@@ -24,6 +25,7 @@ docker run -p 80:80 -p 443:443 -p 9501:9501 -d \
 docker run -p 80:80 -p 443:443 -p 9501:9501 -d \
     --name=eelly-php7 \
     -v D:/workspace/php:/var/www \
+    -v D:/workspace/php/composer:/root/.composer \
     -v D:/workspace/php/docker-php7/etc/nginx/certs:/etc/nginx/certs \
     -v D:/workspace/php/docker-php7/etc/nginx/conf.d:/etc/nginx/conf.d \
     eelly/php7

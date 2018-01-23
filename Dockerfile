@@ -133,15 +133,20 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log
 
-# add supervisor git and bash
-RUN apk --no-cache add supervisor git bash
+# add supervisor git bash openssl
+RUN apk --no-cache add supervisor git bash openssl
 
-ENV PHALCON_VERSION=3.2.4
+RUN set -xe \
+    && apk --no-cache --virtual add linux-headers zlib-dev openssl-dev
 
-# compile phalcon extension
 RUN set -xe \
     && apk add --no-cache --virtual .build-deps autoconf g++ make pcre-dev re2c
 
+# install some extension
+RUN docker-php-ext-install bcmath pdo_mysql mysqli
+
+# compile phalcon extension
+ENV PHALCON_VERSION=3.3.0
 RUN curl -fsSL https://github.com/phalcon/cphalcon/archive/v${PHALCON_VERSION}.tar.gz -o cphalcon.tar.gz \
     && mkdir -p cphalcon \
     && tar -xf cphalcon.tar.gz -C cphalcon --strip-components=1 \
@@ -162,25 +167,16 @@ RUN set -xe \
     && docker-php-ext-install /tmp/phpiredis \
     && rm -r /tmp/phpiredis
 
-# install some extension
-RUN docker-php-ext-install bcmath pdo_mysql mysqli
-
-# install swoole
-RUN set -xe \
-    && apk --no-cache --virtual add linux-headers zlib-dev
-
-ENV SWOOLE_VERSION=1.9.23
+# compile swoole extension
+ENV SWOOLE_VERSION=2.0.10
 RUN set -xe \
     && curl -fsSL http://pecl.php.net/get/swoole-${SWOOLE_VERSION}.tgz -o swoole.tar.gz \
     && mkdir -p /tmp/swoole \
     && tar -xf swoole.tar.gz -C /tmp/swoole --strip-components=1 \
     && rm swoole.tar.gz \
-    && docker-php-ext-configure /tmp/swoole --enable-swoole \
+    && docker-php-ext-configure /tmp/swoole --enable-swoole --enable-openssl --enable-coroutine\
     && docker-php-ext-install /tmp/swoole \
     && rm -r /tmp/swoole
-
-RUN set -xe \
-    && apk add --no-cache --virtual openssl-dev
 
 ENV IGBINARY_VERSION=2.0.5
 RUN set -xe \
@@ -216,7 +212,7 @@ RUN set -xe \
     && rm -r /tmp/memcached
 
 ENV REDIS_VERSION=3.1.4
-# compile memcached extension
+# compile redis extension
 RUN set -xe \
     && curl -fsSL http://pecl.php.net/get/redis-${REDIS_VERSION}.tgz -o redis.tar.gz \
     && mkdir -p /tmp/redis \
