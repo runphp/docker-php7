@@ -143,7 +143,23 @@ RUN set -xe \
     && apk add --no-cache --virtual .build-deps autoconf g++ make pcre-dev re2c
 
 # install some extension
-RUN docker-php-ext-install bcmath pdo_mysql mysqli
+RUN set -xe \
+    && apk add --no-cache --virtual libmcrypt-dev
+RUN docker-php-ext-install mcrypt
+
+RUN set -xe \
+    && apk add --no-cache --virtual libpng-dev libjpeg-turbo-dev
+RUN docker-php-ext-install gd
+
+RUN set -xe \
+    && apk add --no-cache --virtual icu-dev
+RUN docker-php-ext-install intl
+
+RUN set -xe \
+    && apk add --no-cache --virtual libxslt-dev
+RUN docker-php-ext-install xsl
+
+RUN docker-php-ext-install bcmath pdo_mysql mysqli zip soap
 
 # compile phalcon extension
 ENV PHALCON_VERSION=3.3.0
