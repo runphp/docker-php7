@@ -12,12 +12,13 @@
 git clone https://gitee.com/eellydev/api.eelly.com api.eelly.dev
 git clone https://gitee.com/eellydev/www www.blty.dev
 git clone https://github.com/runphp/docker-php7
+git clone https://github.com/runphp/magento2
 # linux
 docker run -p 80:80 -p 443:443 -p 9501:9501 -d \
     --name=eelly-php7 \
     -v $PWD:/var/www \
     -v $PWD/composer:/root/.composer \
-    -v $PWD/ocker-php7/etc/nginx/certs:/etc/nginx/certs \
+    -v $PWD/docker-php7/etc/nginx/certs:/etc/nginx/certs \
     -v $PWD/docker-php7/etc/nginx/conf.d:/etc/nginx/conf.d \
     eelly/php7
 
