@@ -269,6 +269,18 @@ RUN set -xe \
     && docker-php-ext-install /tmp/rar \
     && rm -r /tmp/rar
 
+ENV IMAGICK_VERSION=3.4.3
+# compile imagick extension   imagemagick-dev
+RUN set -xe \
+    && apk add --no-cache libtool imagemagick-dev \
+    && curl -fsSL http://pecl.php.net/get/imagick-${IMAGICK_VERSION}.tgz -o imagick.tar.gz \
+    && mkdir -p /tmp/imagick \
+    && tar -xf imagick.tar.gz -C /tmp/imagick --strip-components=1 \
+    && rm imagick.tar.gz \
+    && docker-php-ext-configure /tmp/imagick --enable-imagick \
+    && docker-php-ext-install /tmp/imagick \
+    && rm -r /tmp/imagick
+
 RUN echo "memory_limit=-1" > "$PHP_INI_DIR/conf.d/memory-limit.ini" \
     && echo "date.timezone=${PHP_TIMEZONE:-UTC}" > "$PHP_INI_DIR/conf.d/date_timezone.ini" \
     && echo "output_buffering=4096" > "$PHP_INI_DIR/conf.d/output_buffering.ini"
