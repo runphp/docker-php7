@@ -34,7 +34,6 @@ docker run -p 80:80 -p 443:443 -p 9501:9501 -d \
 # windows mariadb server
 docker run -p 3306:3306 \
     --name=eelly-mariadb \
-    -v D:/workspace/php/datadir/dolahair:/var/lib/mysql/dolahair \
     -e MYSQL_ROOT_PASSWORD=123456 \
     -d mariadb
 ```
