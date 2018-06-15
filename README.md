@@ -17,6 +17,7 @@ git clone https://github.com/runphp/magento2
 docker run -p 80:80 -p 443:443 -p 9501:9501 -d \
     --name=eelly-php7 \
     -v $PWD:/var/www \
+    -v /root/.ssh:/root/.ssh \
     -v $PWD/composer:/root/.composer \
     -v $PWD/docker-php7/etc/nginx/certs:/etc/nginx/certs \
     -v $PWD/docker-php7/etc/nginx/conf.d:/etc/nginx/conf.d \

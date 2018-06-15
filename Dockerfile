@@ -134,7 +134,7 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
     && ln -sf /dev/stderr /var/log/nginx/error.log
 
 # add supervisor git bash openssl
-RUN apk --no-cache add supervisor git bash openssl
+RUN apk --no-cache add supervisor git bash openssl openssh
 
 RUN set -xe \
     && apk --no-cache --virtual add linux-headers zlib-dev openssl-dev
