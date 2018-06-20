@@ -4,7 +4,11 @@ cd /var/www/api.eelly.com
 git pull -X theirs origin master
 composer up -vvv
 
-cd /var/www/docker-php7.eelly.com
+cd /var/www/docker-php7
+git pull -X theirs origin master
+composer up -vvv
+
+cd /var/www/logger.api.eelly.com
 git pull -X theirs origin master
 composer up -vvv
 
