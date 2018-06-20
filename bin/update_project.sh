@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-
 cd /var/www/api.eelly.com
 git pull -X theirs origin master
 composer up -vvv
