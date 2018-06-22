@@ -20,6 +20,10 @@ cd /var/www/manage.eelly.com
 git pull -X theirs origin master
 composer up -vvv
 
+cd /var/www/m.eelly.com
+git pull -X theirs origin master
+composer up -vvv
+
 cd /var/www/passport.eelly.com
 git pull -X theirs origin master
 composer up -vvv
