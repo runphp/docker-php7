@@ -16,20 +16,23 @@ git clone https://github.com/runphp/magento2
 # linux
 docker run -p 80:80 -p 443:443 -p 9501:9501 -d \
     --name=eelly-php7 \
+    -v ~/.ssh:/root/.ssh \
     -v $PWD:/var/www \
-    -v /root/.ssh:/root/.ssh \
     -v $PWD/composer:/root/.composer \
     -v $PWD/docker-php7/etc/nginx/certs:/etc/nginx/certs \
     -v $PWD/docker-php7/etc/nginx/conf.d:/etc/nginx/conf.d \
+    -v $PWD/docker-php7/etc/php-fpm.d:/usr/local/etc/php-fpm.d \
     eelly/php7
 
 # windows 需要绝对路径
 docker run -p 80:80 -p 443:443 -p 9501:9501 -d \
     --name=eelly-php7 \
+    -v D:/workspace/php/.ssh:/root/.ssh \
     -v D:/workspace/php:/var/www \
     -v D:/workspace/php/composer:/root/.composer \
     -v D:/workspace/php/docker-php7/etc/nginx/certs:/etc/nginx/certs \
     -v D:/workspace/php/docker-php7/etc/nginx/conf.d:/etc/nginx/conf.d \
+    -v D:/workspace/php/docker-php7/etc/php-fpm.d:/usr/local/etc/php-fpm.d \
     eelly/php7
 
 # windows mariadb server
