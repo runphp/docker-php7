@@ -175,7 +175,7 @@ RUN docker-php-ext-install zip
 RUN docker-php-ext-install soap
 
 # compile phalcon extension
-ENV PHALCON_VERSION=3.3.0
+ENV PHALCON_VERSION=3.4.0
 RUN curl -fsSL https://github.com/phalcon/cphalcon/archive/v${PHALCON_VERSION}.tar.gz -o cphalcon.tar.gz \
     && mkdir -p cphalcon \
     && tar -xf cphalcon.tar.gz -C cphalcon --strip-components=1 \
