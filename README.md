@@ -9,10 +9,21 @@
 ### 检出开发项目和docker配置信息
 
 ```sh
-git clone https://gitee.com/eellydev/api.eelly.com api.eelly.dev
-git clone https://gitee.com/eellydev/www www.blty.dev
 git clone https://github.com/runphp/docker-php7
-git clone https://github.com/runphp/magento2
+
+git clone https://gitee.com/eellydev/api.eelly.com
+git clone https://gitee.com/eellydev/bbs.eelly.com
+git clone https://gitee.com/eellydev/logger.api.eelly.com
+git clone https://gitee.com/eellydev/m.eelly.com
+git clone https://gitee.com/eellydev/mall.eelly.com
+git clone https://gitee.com/eellydev/manage.eelly.com
+git clone https://gitee.com/eellydev/passport.eelly.com
+git clone https://gitee.com/eellydev/pf.eelly.com
+git clone https://gitee.com/eellydev/pifaquan.eelly.com
+git clone https://gitee.com/eellydev/so.eelly.com
+git clone https://gitee.com/eellydev/uc.eelly.com
+git clone https://gitee.com/eellydev/www.eelly.com
+
 # linux
 docker run -p 80:80 -p 443:443 -p 9501:9501 -d \
     --name=eelly-php7 \
