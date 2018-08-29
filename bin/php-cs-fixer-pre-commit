@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+while read -r file;
+do
+  file=${file}
+  if [[ $file = *.php ]];
+  then
+    php-cs-fixer fix "$file" -vvv
+  fi
+done < <(git diff --name-only --diff-filter=ACM)

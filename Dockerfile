@@ -197,7 +197,7 @@ RUN set -xe \
     && rm -r /tmp/phpiredis
 
 # compile swoole extension
-ENV SWOOLE_VERSION=2.2.0
+ENV SWOOLE_VERSION=4.0.4
 RUN set -xe \
     && curl -fsSL http://pecl.php.net/get/swoole-${SWOOLE_VERSION}.tgz -o swoole.tar.gz \
     && mkdir -p /tmp/swoole \
@@ -289,14 +289,6 @@ RUN echo "memory_limit=-1" > "$PHP_INI_DIR/conf.d/memory-limit.ini" \
     && echo "date.timezone=${PHP_TIMEZONE:-UTC}" > "$PHP_INI_DIR/conf.d/date_timezone.ini" \
     && echo "output_buffering=4096" > "$PHP_INI_DIR/conf.d/output_buffering.ini"
 
-# add composer
-COPY install/composer.phar /usr/bin/composer
-RUN chmod a+x /usr/bin/composer
-
-# add phpunit
-COPY install/phpunit.phar /usr/bin/phpunit
-RUN chmod a+x /usr/bin/phpunit
-
 RUN mkdir -p /var/www \
     && mkdir -p /etc/nginx/certs \
     && mkdir -p /etc/nginx/conf.d
@@ -307,6 +299,8 @@ COPY etc/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY etc/nginx/conf.d/_.conf /etc/nginx/conf.d/default.conf
 
 WORKDIR /var/www
+
+ENV PATH="/var/www/docker-php7/bin:${PATH}"
 
 EXPOSE 80 443 9000
 
