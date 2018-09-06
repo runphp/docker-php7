@@ -61,3 +61,9 @@ docker exec -it eelly-php7 composer install -d api.eelly.dev -vvv
 # windows
 winpty docker exec -it eelly-php7 composer install -d api.eelly.dev -vvv
 ```
+
+### 查看日志
+
+```sh
+docker logs -f --details eelly-php7
+```
