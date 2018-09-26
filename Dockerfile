@@ -152,12 +152,13 @@ RUN set -xe \
 RUN docker-php-ext-install mcrypt
 
 RUN set -xe \
-    && apk add --no-cache freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev \
+    && apk add --no-cache freetype freetype-dev libpng-dev libjpeg-turbo-dev libwebp-dev \
     && docker-php-ext-configure gd \
        --with-gd \
        --with-freetype-dir=/usr/include/ \
        --with-jpeg-dir=/usr/include/ \
        --with-png-dir=/usr/include/ \
+       --with-webp-dir=/usr/include/ \
     && docker-php-ext-install gd
 
 RUN set -xe \
