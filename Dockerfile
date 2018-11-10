@@ -198,7 +198,7 @@ RUN set -xe \
     && rm -r /tmp/phpiredis
 
 # compile swoole extension
-ENV SWOOLE_VERSION=4.0.4
+ENV SWOOLE_VERSION=4.2.6
 RUN set -xe \
     && curl -fsSL http://pecl.php.net/get/swoole-${SWOOLE_VERSION}.tgz -o swoole.tar.gz \
     && mkdir -p /tmp/swoole \
