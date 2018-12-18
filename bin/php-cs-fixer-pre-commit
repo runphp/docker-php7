@@ -7,4 +7,4 @@ do
   then
     php-cs-fixer fix "$file" -vvv
   fi
-done < <(git diff --name-only --diff-filter=ACM)
+done <<(git diff --name-only --diff-filter=ACM)

@@ -11,18 +11,18 @@
 ```sh
 git clone https://github.com/runphp/docker-php7
 
-git clone https://gitee.com/eellydev/api.eelly.com
-git clone https://gitee.com/eellydev/bbs.eelly.com
-git clone https://gitee.com/eellydev/logger.api.eelly.com
-git clone https://gitee.com/eellydev/m.eelly.com
-git clone https://gitee.com/eellydev/mall.eelly.com
-git clone https://gitee.com/eellydev/manage.eelly.com
-git clone https://gitee.com/eellydev/passport.eelly.com
-git clone https://gitee.com/eellydev/pf.eelly.com
-git clone https://gitee.com/eellydev/pifaquan.eelly.com
-git clone https://gitee.com/eellydev/so.eelly.com
-git clone https://gitee.com/eellydev/uc.eelly.com
-git clone https://gitee.com/eellydev/www.eelly.com
+git clone https://gitee.com/EellyDevGroup/api.eelly.com
+git clone https://gitee.com/EellyDevGroup/bbs.eelly.com
+git clone https://gitee.com/EellyDevGroup/logger.api.eelly.com
+git clone https://gitee.com/EellyDevGroup/m.eelly.com
+git clone https://gitee.com/EellyDevGroup/mall.eelly.com
+git clone https://gitee.com/EellyDevGroup/manage.eelly.com
+git clone https://gitee.com/EellyDevGroup/passport.eelly.com
+git clone https://gitee.com/EellyDevGroup/pf.eelly.com
+git clone https://gitee.com/EellyDevGroup/pifaquan.eelly.com
+git clone https://gitee.com/EellyDevGroup/so.eelly.com
+git clone https://gitee.com/EellyDevGroup/uc.eelly.com
+git clone https://gitee.com/EellyDevGroup/www.eelly.com
 
 # linux
 docker run -p 80:80 -p 443:443 -p 9501:9501 -d \
@@ -38,7 +38,6 @@ docker run -p 80:80 -p 443:443 -p 9501:9501 -d \
 # windows 需要绝对路径
 docker run -p 80:80 -p 443:443 -p 9501:9501 -d \
     --name=eelly-php7 \
-    -v D:/workspace/php/.ssh:/root/.ssh \
     -v D:/workspace/php:/var/www \
     -v D:/workspace/php/composer:/root/.composer \
     -v D:/workspace/php/docker-php7/etc/nginx/certs:/etc/nginx/certs \

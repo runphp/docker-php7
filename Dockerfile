@@ -174,6 +174,9 @@ RUN docker-php-ext-install pdo_mysql
 RUN docker-php-ext-install mysqli
 RUN docker-php-ext-install zip
 RUN docker-php-ext-install soap
+RUN docker-php-ext-install sysvsem
+RUN docker-php-ext-install sysvshm
+RUN docker-php-ext-install sysvmsg
 
 # compile phalcon extension
 ENV PHALCON_VERSION=3.4.0
@@ -198,7 +201,7 @@ RUN set -xe \
     && rm -r /tmp/phpiredis
 
 # compile swoole extension
-ENV SWOOLE_VERSION=4.2.6
+ENV SWOOLE_VERSION=4.2.9
 RUN set -xe \
     && curl -fsSL http://pecl.php.net/get/swoole-${SWOOLE_VERSION}.tgz -o swoole.tar.gz \
     && mkdir -p /tmp/swoole \
