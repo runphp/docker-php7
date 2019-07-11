@@ -4,7 +4,7 @@ LABEL maintainer="runphp <runphp@qq.com>"
 
 # add packages
 RUN apk add supervisor git bash openssl openssh
-RUN apk add .build-deps autoconf g++ make pcre-dev re2c
+RUN apk add autoconf g++ make pcre-dev re2c
 RUN apk add linux-headers zlib-dev openssl-dev
 RUN apk add libmcrypt-dev icu-dev libxslt-dev
 RUN apk add freetype freetype-dev libpng-dev libjpeg-turbo-dev libwebp-dev
