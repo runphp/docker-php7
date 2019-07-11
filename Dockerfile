@@ -166,7 +166,7 @@ RUN curl -fsSL https://github.com/phalcon/cphalcon/archive/v${PHALCON_VERSION}.t
 
 # compile phpiredis extension
 RUN apk add hiredis-dev
-RUN curl -fsSL https://github.com/nrk/phpiredis/archive/v1.0.0.tar.gz -o phpiredis.tar.gz \
+RUN curl -fsSL https://github.com/nrk/phpiredis/archive/master.zip -o phpiredis.tar.gz \
     && mkdir -p /tmp/phpiredis \
     && tar -xf phpiredis.tar.gz -C /tmp/phpiredis --strip-components=1 \
     && rm phpiredis.tar.gz \
