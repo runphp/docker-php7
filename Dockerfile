@@ -2,10 +2,19 @@ FROM php:7.1-fpm-alpine
 
 LABEL maintainer="runphp <runphp@qq.com>"
 
+# add supervisor git bash openssl
+RUN apk --no-cache add supervisor git bash openssl openssh
+
+RUN set -xe \
+    && apk --no-cache --virtual add linux-headers zlib-dev openssl-dev
+
+RUN set -xe \
+    && apk add --no-cache --virtual .build-deps autoconf g++ make pcre-dev re2c
+
 # install nginx
-ENV NGINX_VERSION 1.17.0
-ENV NJS_VERSION   0.3.2
-ENV PKG_RELEASE 1
+ENV NGINX_VERSION 1.17.1
+ENV NJS_VERSION   0.3.3
+ENV PKG_RELEASE   1
 
 RUN set -x \
 # create nginx user/group first, to be consistent throughout docker variants
@@ -25,17 +34,17 @@ RUN set -x \
             set -x \
             && KEY_SHA512="e7fa8303923d9b95db37a77ad46c68fd4755ff935d0a534d26eba83de193c76166c68bfe7f65471bf8881004ef4aa6df3e34689c305662750c0172fca5d8552a *stdin" \
             && apk add --no-cache --virtual .cert-deps \
-                openssl curl ca-certificates \
-            && curl -o /tmp/nginx_signing.rsa.pub https://nginx.org/keys/nginx_signing.rsa.pub \
+                openssl \
+            && wget -O /tmp/nginx_signing.rsa.pub https://nginx.org/keys/nginx_signing.rsa.pub \
             && if [ "$(openssl rsa -pubin -in /tmp/nginx_signing.rsa.pub -text -noout | openssl sha512 -r)" = "$KEY_SHA512" ]; then \
-                 echo "key verification succeeded!"; \
-                 mv /tmp/nginx_signing.rsa.pub /etc/apk/keys/; \
-               else \
-                 echo "key verification failed!"; \
-                 exit 1; \
-               fi \
+                echo "key verification succeeded!"; \
+                mv /tmp/nginx_signing.rsa.pub /etc/apk/keys/; \
+            else \
+                echo "key verification failed!"; \
+                exit 1; \
+            fi \
             && printf "%s%s%s\n" \
-                "http://nginx.org/packages/mainline/alpine/v" \
+                "https://nginx.org/packages/mainline/alpine/v" \
                 `egrep -o '^[0-9]+\.[0-9]+' /etc/alpine-release` \
                 "/main" \
             | tee -a /etc/apk/repositories \
@@ -64,7 +73,7 @@ RUN set -x \
                 bash \
                 alpine-sdk \
                 findutils \
-            && su - nobody -s /bin/sh -c " \
+            && su nobody -s /bin/sh -c " \
                 export HOME=${tempDir} \
                 && cd ${tempDir} \
                 && hg clone https://hg.nginx.org/pkg-oss \
@@ -110,15 +119,6 @@ RUN set -x \
 # forward request and error logs to docker log collector
     && ln -sf /dev/stdout /var/log/nginx/access.log \
     && ln -sf /dev/stderr /var/log/nginx/error.log
-
-# add supervisor git bash openssl
-RUN apk --no-cache add supervisor git bash openssl openssh
-
-RUN set -xe \
-    && apk --no-cache --virtual add linux-headers zlib-dev openssl-dev
-
-RUN set -xe \
-    && apk add --no-cache --virtual .build-deps autoconf g++ make pcre-dev re2c
 
 # install some extension
 RUN set -xe \
