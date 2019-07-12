@@ -39,7 +39,7 @@ RUN curl -fsSL https://github.com/phalcon/cphalcon/archive/v${PHALCON_VERSION}.t
 # compile phpiredis extension
 RUN apk add hiredis-dev
 RUN mkdir -p /tmp/phpiredis \
-    && git clone -b master https://github.com/nrk/phpiredis.git /tmp/phpiredis \
+    && git clone -b v1.0 https://github.com/runphp/phpiredis.git /tmp/phpiredis \
     && docker-php-ext-configure /tmp/phpiredis --enable-phpiredis \
     && docker-php-ext-install /tmp/phpiredis \
     && rm -r /tmp/phpiredis
