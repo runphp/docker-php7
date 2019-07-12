@@ -11,8 +11,6 @@ RUN apk add freetype freetype-dev libpng-dev libjpeg-turbo-dev libwebp-dev
 RUN apk add nginx go nodejs
 
 # install some extension
-
-
 RUN docker-php-ext-install gd
 RUN docker-php-ext-install intl
 RUN docker-php-ext-install xsl
@@ -40,10 +38,8 @@ RUN curl -fsSL https://github.com/phalcon/cphalcon/archive/v${PHALCON_VERSION}.t
 
 # compile phpiredis extension
 RUN apk add hiredis-dev
-RUN curl -fsSL https://github.com/nrk/phpiredis/archive/master.zip -o phpiredis.tar.gz \
-    && mkdir -p /tmp/phpiredis \
-    && tar -xf phpiredis.tar.gz -C /tmp/phpiredis --strip-components=1 \
-    && rm phpiredis.tar.gz \
+RUN mkdir -p /tmp/phpiredis \
+    && git clone -b master https://github.com/nrk/phpiredis.git /tmp/phpiredis \
     && docker-php-ext-configure /tmp/phpiredis --enable-phpiredis \
     && docker-php-ext-install /tmp/phpiredis \
     && rm -r /tmp/phpiredis
