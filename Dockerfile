@@ -8,7 +8,6 @@ RUN apk add autoconf g++ make pcre-dev re2c
 RUN apk add linux-headers zlib-dev openssl-dev
 RUN apk add libmcrypt-dev icu-dev libxslt-dev
 RUN apk add freetype freetype-dev libpng-dev libjpeg-turbo-dev libwebp-dev
-RUN apk add nginx go nodejs
 
 # install some extension
 RUN docker-php-ext-install gd
@@ -137,20 +136,11 @@ RUN echo "memory_limit=-1" > "$PHP_INI_DIR/conf.d/memory-limit.ini" \
     && echo "date.timezone=${PHP_TIMEZONE:-UTC}" > "$PHP_INI_DIR/conf.d/date_timezone.ini" \
     && echo "output_buffering=4096" > "$PHP_INI_DIR/conf.d/output_buffering.ini"
 
-RUN mkdir -p /var/www \
-    && mkdir -p /etc/nginx/certs \
-    && mkdir -p /etc/nginx/conf.d
-
-VOLUME ["/var/www", "/etc/nginx/certs", "/etc/nginx/conf.d"]
-
-COPY etc/nginx/nginx.conf /etc/nginx/nginx.conf
-COPY etc/nginx/conf.d/_.conf /etc/nginx/conf.d/default.conf
-
 WORKDIR /var/www
 
 ENV PATH="/var/www/docker-php7/bin:${PATH}"
 
-EXPOSE 80 443 9000
+EXPOSE 9000
 
 STOPSIGNAL SIGTERM
 
